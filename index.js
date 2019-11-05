@@ -2,8 +2,11 @@ const express       = require('express'),
       app           = express(),
       bodyParser    = require('body-parser'),
       mongoose      = require('mongoose'),
+      passport      = require('passport'),
+      LocalStrategy = require('passport-local'),
       Comment       = require('./models/comment'),
       Campground    = require('./models/campground'),
+      User          = require('./models/user'),
       seedDB        = require('./seeds');
 
 mongoose.connect('mongodb://localhost/yelp_camp', {
@@ -15,6 +18,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
 seedDB();
+
+// Passport.js config
+app.use(require('express-session')({
+    secret: 'foxtrot uniform charlie kilo',
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.get('/', (req, res) => {
     res.render('landing');
@@ -94,6 +109,26 @@ app.post('/campgrounds/:id/comments', (req, res) => {
                 }
             });
         }
+    });
+});
+
+// ======================
+// Auth routes
+// ======================
+app.get('/register', (req, res) => {
+    res.render('register');
+});
+
+app.post('/register', (req, res) => {
+    const newUser = new User({username: req.body.username});
+    User.register(newUser, req.body.password, (err, user) => {
+        if (err) {
+            console.log(err);
+            return res.render('register');
+        }
+        passport.authenticate('local')(req, res, () => {
+            res.redirect('/campgrounds');
+        });
     });
 });
 
