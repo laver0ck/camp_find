@@ -132,6 +132,17 @@ app.post('/register', (req, res) => {
     });
 });
 
+// login form
+app.get('/login', (req, res) => {
+    res.render('login');
+});
+
+app.post('/login', passport.authenticate('local', {
+    successRedirect: '/campgrounds',
+    failureRedirect: '/login'
+    }), (req, res) => {
+});
+
 app.listen(3000, () => {
     console.log('YelpCamp server has started(:3000)');
 });
