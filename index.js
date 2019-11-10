@@ -38,6 +38,11 @@ const isLoggedIn = (req, res, next) => {
     res.redirect('/login');
 }
 
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    next();
+});
+
 app.get('/', (req, res) => {
     res.render('landing');
 });
