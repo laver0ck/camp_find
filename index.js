@@ -17,7 +17,8 @@ const campgroundRoutes = require('./routes/campgrounds'),
 
 mongoose.connect('mongodb://localhost/yelp_camp', {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
 });
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
