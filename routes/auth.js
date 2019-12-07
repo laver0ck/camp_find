@@ -3,14 +3,6 @@ const router = express.Router();
 const passport = require('passport');
 const User = require('../models/user');
 
-// middleware
-const isLoggedIn = (req, res, next) => {
-    if(req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/login');
-}
-
 // register form
 router.get('/register', (req, res) => {
     res.render('register');
@@ -21,10 +13,11 @@ router.post('/register', (req, res) => {
     const newUser = new User({username: req.body.username});
     User.register(newUser, req.body.password, (err, user) => {
         if (err) {
-            console.log(err);
-            return res.render('register');
+            req.flash('error', err.message);
+            return res.redirect('/register');
         }
         passport.authenticate('local')(req, res, () => {
+            req.flash('success', `Welcome to Yelp Camp ${user.username}`);
             res.redirect('/campgrounds');
         });
     });
