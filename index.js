@@ -1,20 +1,20 @@
-const express           = require('express'),
-      app               = express(),
-      bodyParser        = require('body-parser'),
-      mongoose          = require('mongoose'),
-      flash             = require('connect-flash'),
-      passport          = require('passport'),
-      LocalStrategy     = require('passport-local'),
-      methodOverride    = require('method-override'),
-      Comment           = require('./models/comment'),
-      Campground        = require('./models/campground'),
-      User              = require('./models/user'),
-      seedDB            = require('./seeds');
+const express = require('express'),
+    app = express(),
+    bodyParser = require('body-parser'),
+    mongoose = require('mongoose'),
+    flash = require('connect-flash'),
+    passport = require('passport'),
+    LocalStrategy = require('passport-local'),
+    methodOverride = require('method-override'),
+    Comment = require('./models/comment'),
+    Campground = require('./models/campground'),
+    User = require('./models/user'),
+    seedDB = require('./seeds');
 
 // requiring routes
 const campgroundRoutes = require('./routes/campgrounds'),
-      commentsRoutes   = require('./routes/comments'),
-      authRoutes       = require('./routes/auth');
+    commentsRoutes = require('./routes/comments'),
+    authRoutes = require('./routes/auth');
 
 mongoose.connect('mongodb://localhost/yelp_camp', {
     useNewUrlParser: true,
@@ -26,8 +26,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 app.use(methodOverride('_method'));
 app.use(flash());
-
-// seedDB(); // seed the database
 
 // Passport.js config
 app.use(require('express-session')({

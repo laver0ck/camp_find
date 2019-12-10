@@ -3,10 +3,10 @@ const Comment = require('../models/comment');
 // all the middleware goes here
 const middlewareObj = {};
 
-middlewareObj.checkCampgroundOwnership = function(req, res, next) {
+middlewareObj.checkCampgroundOwnership = function (req, res, next) {
     if (req.isAuthenticated()) {
-        Campground.findById(req.params.id, function(err, foundCampground) {
-            if (err) {
+        Campground.findById(req.params.id, function (err, foundCampground) {
+            if (err || !foundCampground) {
                 req.flash('error', 'Campground not found');
                 res.redirect("back");
             } else {
@@ -25,10 +25,10 @@ middlewareObj.checkCampgroundOwnership = function(req, res, next) {
     }
 }
 
-middlewareObj.checkCommentOwnership = function(req, res, next) {
+middlewareObj.checkCommentOwnership = function (req, res, next) {
     if (req.isAuthenticated()) {
         Comment.findById(req.params.comment_id, (err, foundComment) => {
-            if (err) {
+            if (err || !foundComment) {
                 req.flash('error', 'Comment not found');
                 res.redirect('back');
             } else {
@@ -47,8 +47,8 @@ middlewareObj.checkCommentOwnership = function(req, res, next) {
     }
 }
 
-middlewareObj.isLoggedIn = function(req, res, next) {
-    if(req.isAuthenticated()) {
+middlewareObj.isLoggedIn = function (req, res, next) {
+    if (req.isAuthenticated()) {
         return next();
     }
     req.flash('error', 'You need to be logged in to do that');
